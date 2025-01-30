@@ -1,0 +1,15 @@
+[gd_resource type="CapsuleMesh" load_steps=3 format=3 uid="uid://dkcbu6w4m1gdi"]
+
+[ext_resource type="Shader" uid="uid://duk06mrimpj6h" path="res://Shaders/HealingArea.tres" id="1_uktse"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rgumq"]
+render_priority = 0
+shader = ExtResource("1_uktse")
+shader_parameter/Color = Color(0.647059, 0.290196, 0.439216, 1)
+shader_parameter/ExtraOpacity = 0.5
+shader_parameter/Speed = Vector2(2, 2)
+
+[resource]
+material = SubResource("ShaderMaterial_rgumq")
+radius = 0.25
+height = 0.5

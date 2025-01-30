@@ -1,0 +1,66 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Jeu de Carte Test Ronaldo Suiiiiii"
+config/description="la base"
+config/version="0.0.1"
+run/main_scene="res://Scènes/UiDebug.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://Assets/Troops/In Battle/idk.png"
+run/description="la base"
+run/version="0.0.1"
+
+[autoload]
+
+GlobalVariables="*res://Scripts/Other Important Things/GlobalVariables.gd"
+
+[display]
+
+window/size/extend_to_title=true
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/stretch/scale_mode="integer"
+
+[dotnet]
+
+project/assembly_name="Projets Godot"
+
+[editor_plugins]
+
+enabled=PackedStringArray()
+
+[file_customization]
+
+folder_colors={
+"res://Assets/Troops/": "red",
+"res://Assets/Troops/Bullets/": "red",
+"res://Assets/Troops/In Battle/": "orange",
+"res://Assets/Troops/In UI/": "yellow",
+"res://Scripts/Components/Basic Components/": "teal",
+"res://Scripts/Components/For Bullets/": "red",
+"res://Scripts/Components/For Troops/": "blue",
+"res://Scripts/Components/Make Something Components/": "green"
+}
+
+[input]
+
+Sourie={
+"deadzone": 0.52,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=1

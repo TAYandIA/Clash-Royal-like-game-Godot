@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://deqj63xdetgw7"]
+
+[ext_resource type="Texture2D" uid="uid://b0ijf0tkv177h" path="res://Assets/UI/Background_UI_Summon_Troops.png" id="1_ioi4n"]
+[ext_resource type="Script" path="res://Scripts/Arena/Setup And Spawning Arena.gd" id="1_yoe0q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_80twc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfay0"]
+bg_color = Color(0.980392, 0, 1, 1)
+
+[node name="UI Arena" type="Node2D"]
+
+[node name="Markers" type="Node2D" parent="."]
+
+[node name="Marker3D" type="Marker2D" parent="Markers"]
+position = Vector2(310, 39)
+script = ExtResource("1_yoe0q")
+Team = "Player1"
+
+[node name="Marker3D2" type="Marker2D" parent="Markers"]
+position = Vector2(197, 39)
+script = ExtResource("1_yoe0q")
+Team = "Player1"
+
+[node name="Marker3D3" type="Marker2D" parent="Markers"]
+position = Vector2(79, 39)
+script = ExtResource("1_yoe0q")
+Team = "Player1"
+
+[node name="BackgroundUiSummonTroops" type="Sprite2D" parent="."]
+position = Vector2(218.5, 110.5)
+scale = Vector2(2.41667, 2.19)
+texture = ExtResource("1_ioi4n")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+offset_left = 92.0
+offset_top = 9.0
+offset_right = 422.0
+offset_bottom = 32.0
+scale = Vector2(0.966897, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_80twc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bfay0")
+max_value = 1000.0
+value = 1000.0

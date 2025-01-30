@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://dqhfskv0ievq3"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Bullets/Simple Bullet.gd" id="1_rb4lw"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangeOrIncreaseStat.gd" id="3_blb7h"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qydl6"]
+albedo_color = Color(0.909804, 0.14902, 0.643137, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_vln4w"]
+material = SubResource("StandardMaterial3D_qydl6")
+radial_segments = 32
+rings = 16
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fc2vf"]
+
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("EventToDoToTheEnemy", "EventToDoToTheCalleur")]
+script = ExtResource("1_rb4lw")
+SpeedBullet = 30.0
+EventToDoToTheEnemy = [NodePath("+Health")]
+EventToDoToTheCalleur = [NodePath("+Capacity")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_vln4w")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_fc2vf")
+
+[node name="+Health" type="Node" parent="."]
+script = ExtResource("3_blb7h")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Health"
+Value = 30.0
+
+[node name="+Capacity" type="Node" parent="."]
+script = ExtResource("3_blb7h")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Capacity"
+Value = 1.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://cxgufh5n6v5m4"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Bullets/Simple Bullet.gd" id="1_ib1i5"]
+[ext_resource type="Texture2D" uid="uid://d23yl525rahfj" path="res://Assets/Troops/In UI/Bleu.png" id="2_tb6wh"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangeOrIncreaseStat.gd" id="3_1qkok"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qydl6"]
+albedo_texture = ExtResource("2_tb6wh")
+
+[sub_resource type="SphereMesh" id="SphereMesh_vln4w"]
+material = SubResource("StandardMaterial3D_qydl6")
+radial_segments = 32
+rings = 16
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fc2vf"]
+
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("EventToDoToTheEnemy")]
+script = ExtResource("1_ib1i5")
+SpeedBullet = 20.0
+WhenCollideWithEntitities = 1
+EventToDoToTheEnemy = [NodePath("ChangeOrIncreaseStat")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_vln4w")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_fc2vf")
+
+[node name="ChangeOrIncreaseStat" type="Node" parent="."]
+script = ExtResource("3_1qkok")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Health"
+Value = -5.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,99 @@
+[gd_scene load_steps=14 format=3 uid="uid://cmgwxfwdnqhy5"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Bullets/Simple Bullet.gd" id="1_cghef"]
+[ext_resource type="Texture2D" uid="uid://bdqown2dk4st0" path="res://Assets/IconForClasses/IconSpawn.png" id="2_83oj3"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/For Checking Something/CheckInArea.gd" id="3_pyfv7"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/SpawnSomething/SpawnNode.gd" id="4_bvk0f"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangeOrIncreaseStat.gd" id="4_jl6ih"]
+[ext_resource type="PackedScene" uid="uid://cethri1s7o2nn" path="res://Scènes/Effects/healing_area.tscn" id="4_n2mrg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c4ydv"]
+albedo_color = Color(1, 0.4, 0, 1)
+albedo_texture = ExtResource("2_83oj3")
+
+[sub_resource type="SphereMesh" id="SphereMesh_c5v5h"]
+material = SubResource("StandardMaterial3D_c4ydv")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fc2vf"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_o5ymx"]
+radius = 5.0
+
+[sub_resource type="Animation" id="Animation_irik0"]
+resource_name = "CheckInArea"
+length = 0.6
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HealingArea")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 10, 5, 10, 0.6, 1, 0, 0, 0)
+
+[sub_resource type="Animation" id="Animation_draai"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HealingArea")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 10, 5, 10)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rh8j2"]
+_data = {
+"CheckInArea": SubResource("Animation_irik0"),
+"RESET": SubResource("Animation_draai")
+}
+
+[node name="Bullet" type="Area3D" node_paths=PackedStringArray("EventToDoToTheEnemy", "EventToDoToTheCalleur")]
+script = ExtResource("1_cghef")
+SpeedBullet = 20.0
+Percing = true
+EventToDoToTheEnemy = [NodePath("MakeEventInArea")]
+EventToDoToTheCalleur = [NodePath("+Capacity")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_c5v5h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_fc2vf")
+
+[node name="+Capacity" type="Node" parent="."]
+script = ExtResource("4_jl6ih")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Capacity"
+Value = 1.0
+
+[node name="SpawnNode" type="Marker3D" parent="." node_paths=PackedStringArray("ArrayOfSomethingToSpawn")]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+script = ExtResource("4_bvk0f")
+ArrayOfSomethingToSpawn = [NodePath("../MakeEventInArea")]
+
+[node name="MakeEventInArea" type="Area3D" parent="." node_paths=PackedStringArray("Event")]
+visible = false
+script = ExtResource("3_pyfv7")
+Event = [NodePath("+health")]
+ApplyEventTo = 0
+CountSelfToo = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MakeEventInArea"]
+shape = SubResource("CylinderShape3D_o5ymx")
+disabled = true
+
+[node name="+health" type="Node" parent="MakeEventInArea"]
+script = ExtResource("4_jl6ih")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Health"
+Value = 10.0
+
+[node name="HealingArea" parent="MakeEventInArea" instance=ExtResource("4_n2mrg")]
+transform = Transform3D(10, 0, 0, 0, 5, 0, 0, 0, 10, 0, 1.5909, 0)
+skeleton = NodePath("")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MakeEventInArea"]
+libraries = {
+"": SubResource("AnimationLibrary_rh8j2")
+}
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

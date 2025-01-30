@@ -1,0 +1,148 @@
+[gd_scene load_steps=17 format=3 uid="uid://cq02kxhtxw47"]
+
+[ext_resource type="Script" path="res://Scripts/UI/DEBUG.gd" id="1_ptwfb"]
+[ext_resource type="Texture2D" uid="uid://bcf1kj7hvpbjg" path="res://Assets/Troops/In UI/Card_UI.png" id="2_0jy2g"]
+[ext_resource type="PackedScene" uid="uid://d1ph1vcldk5y3" path="res://Scènes/Troops/rouge3D.tscn" id="3_6hssq"]
+[ext_resource type="Texture2D" uid="uid://33e3iic372xb" path="res://Assets/Troops/In UI/SpellDamagegeg.png" id="4_3p1tq"]
+[ext_resource type="Texture2D" uid="uid://d23yl525rahfj" path="res://Assets/Troops/In UI/Bleu.png" id="4_6y3ma"]
+[ext_resource type="Texture2D" uid="uid://b3wr0c6t10lni" path="res://Assets/Troops/In UI/NewSprite12.png" id="5_bsnl3"]
+[ext_resource type="PackedScene" uid="uid://fgkw8d43u1n3" path="res://Scènes/Troops/Bleu3D.tscn" id="5_u2xga"]
+[ext_resource type="Texture2D" uid="uid://fqrnowqfo44v" path="res://Assets/Troops/In UI/Wizarddddddd.png" id="6_0aiuv"]
+[ext_resource type="PackedScene" uid="uid://jjoeb10umksq" path="res://Scènes/Troops/Spell.tscn" id="7_8mpu2"]
+[ext_resource type="PackedScene" uid="uid://re74ce17k1mv" path="res://Scènes/Troops/Jaune3d.tscn" id="9_op7ob"]
+[ext_resource type="PackedScene" uid="uid://bkx2ku2x0jhvn" path="res://Scènes/Troops/Wizard.tscn" id="11_7y2es"]
+[ext_resource type="Texture2D" uid="uid://drb8j5vc0yja8" path="res://Assets/Troops/In UI/ElixirGolem.png" id="12_olecw"]
+[ext_resource type="PackedScene" uid="uid://be1v7ciiegbik" path="res://Scènes/Troops/ElixirGolem.tscn" id="13_unlyg"]
+[ext_resource type="Texture2D" uid="uid://c70lffiqjdle5" path="res://Assets/Troops/In UI/Tankkkk.png" id="14_24kkp"]
+[ext_resource type="PackedScene" uid="uid://bqlm7784vkru4" path="res://Scènes/Troops/Tank.tscn" id="15_0a67h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_l2d0t"]
+font_size = 30
+font_color = Color(1, 0, 0, 1)
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ptwfb")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 106.0
+offset_top = 43.0
+offset_right = 651.0
+offset_bottom = 85.0
+text = "JEU DE CARTES DELUXE EDITION OMG"
+label_settings = SubResource("LabelSettings_l2d0t")
+
+[node name="Button" type="Button" parent="Label"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 499.0
+offset_right = 220.0
+offset_bottom = 530.0
+scale = Vector2(2.44598, 2.19418)
+text = "Combattre"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 135.0
+offset_right = 685.0
+offset_bottom = 509.0
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.74
+anchor_top = 0.014
+anchor_right = 0.983
+anchor_bottom = 1.16
+offset_left = -176.48
+offset_top = -0.0719929
+offset_right = -80.416
+offset_bottom = -253.68
+scale = Vector2(1.25, 1.25)
+columns = 2
+
+[node name="MultiTouchButton" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER RED"
+icon = ExtResource("2_0jy2g")
+metadata/Troop = ExtResource("3_6hssq")
+
+[node name="MultiTouchButton4" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER Jaune"
+icon = ExtResource("5_bsnl3")
+metadata/Troop = ExtResource("9_op7ob")
+
+[node name="MultiTouchButton2" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER BLEU"
+icon = ExtResource("4_6y3ma")
+metadata/Troop = ExtResource("5_u2xga")
+
+[node name="MultiTouchButton3" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER Spell"
+icon = ExtResource("4_3p1tq")
+metadata/Troop = ExtResource("7_8mpu2")
+
+[node name="MultiTouchButton5" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER Wizard"
+icon = ExtResource("6_0aiuv")
+metadata/Troop = ExtResource("11_7y2es")
+
+[node name="Button" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER ELIXIR"
+icon = ExtResource("12_olecw")
+metadata/Troop = ExtResource("13_unlyg")
+
+[node name="Button2" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "aJOUTER Tank"
+icon = ExtResource("14_24kkp")
+metadata/Troop = ExtResource("15_0a67h")
+
+[node name="MultiplayerHUD" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 0
+offset_left = 249.0
+offset_top = 393.0
+offset_right = 349.0
+offset_bottom = 463.0
+scale = Vector2(2, 2)
+
+[node name="Panel" type="Panel" parent="MultiplayerHUD"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MultiplayerHUD/Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HostGame" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+layout_mode = 2
+text = "Host Game"
+
+[node name="JoinGame" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+layout_mode = 2
+text = "Join Game"
+
+[connection signal="pressed" from="Label/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/HostGame" to="." method="Become_host"]
+[connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/JoinGame" to="." method="Join"]

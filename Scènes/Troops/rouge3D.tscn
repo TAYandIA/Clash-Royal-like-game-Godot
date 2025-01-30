@@ -1,0 +1,177 @@
+[gd_scene load_steps=19 format=3 uid="uid://d1ph1vcldk5y3"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/troops.gd" id="1_ytnqv"]
+[ext_resource type="Texture2D" uid="uid://bf30x0kldld6h" path="res://icon.svg" id="2_f4vpb"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Détection.gd" id="4_fqwaa"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Health.gd" id="5_4d2lg"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Shoot.gd" id="7_o3afs"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangeOrIncreaseStat.gd" id="8_7o27c"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Shoot Bullet/SplashBullet.gd" id="10_h616d"]
+[ext_resource type="PackedScene" uid="uid://cxgufh5n6v5m4" path="res://Scènes/Bullets/SimpleBullet.tscn" id="11_fh00m"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Movement.gd" id="12_yhdjd"]
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/Card.gd" id="15_rs662"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0x1k"]
+size = Vector3(1, 2, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_iwbi2"]
+viewport_path = NodePath("UI (subview)")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fy0uu"]
+load_path = "res://.godot/imported/idk.png-6c8042c64e3d85d193c1b3392f0b6e0f.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_urg5t"]
+albedo_texture = SubResource("CompressedTexture2D_fy0uu")
+rim_enabled = true
+heightmap_enabled = true
+heightmap_scale = 16.0
+uv1_triplanar_sharpness = 0.00240457
+grow = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_nxmx7"]
+material = SubResource("StandardMaterial3D_urg5t")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3pgk"]
+bg_color = Color(1, 0.776471, 0.843137, 1)
+border_color = Color(0.352941, 0.223529, 1, 1)
+shadow_color = Color(1, 1, 1, 0.639216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5qdn"]
+bg_color = Color(0.113725, 0.352941, 1, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_77kq8"]
+radius = 6.58155
+
+[node name="Rouge3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_ytnqv")
+TeamSide = "Player2"
+InTroops = true
+Description = "ATTAQUE: 
+Rouge appelle des projectiles venant du ciel et blessant ses ennemis
+
+CAPACITE : 
+	Moyen De Chargement :  En Attendant un certain temps
+	Valeur Temps : 5s
+Rouge se soigne et augmente sa vitesse d'attaque"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0426636, 0)
+shape = SubResource("BoxShape3D_a0x1k")
+
+[node name="UI (sprite)" type="Sprite3D" parent="."]
+transform = Transform3D(2.99498, 0, 0, 0, 1.97921, 2.24782, 0, -2.24782, 1.97921, 0, 1.69338, 0)
+texture = SubResource("ViewportTexture_iwbi2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_nxmx7")
+
+[node name="UI (subview)" type="SubViewport" parent="."]
+transparent_bg = true
+gui_snap_controls_to_pixels = false
+size = Vector2i(136, 74)
+
+[node name="Debug" type="Label" parent="UI (subview)"]
+offset_left = 41.0
+offset_top = 6.0
+offset_right = 91.0
+offset_bottom = 29.0
+text = "Debug
+"
+
+[node name="HealthComponent" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("DebugText")]
+unique_name_in_owner = true
+offset_left = -1.0
+offset_top = 31.0
+offset_right = 136.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.909804, 0.764706, 0.968627, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_t3pgk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_h5qdn")
+value = 100.0
+show_percentage = false
+script = ExtResource("5_4d2lg")
+DebugText = NodePath("../Debug")
+
+[node name="Components" type="Node3D" parent="."]
+
+[node name="Shoot" type="Timer" parent="Components" node_paths=PackedStringArray("EventShoot")]
+unique_name_in_owner = true
+autostart = true
+script = ExtResource("7_o3afs")
+EventShoot = [NodePath("../ShootSplashBullet")]
+
+[node name="MoveComponent" type="NavigationAgent3D" parent="Components" node_paths=PackedStringArray("TimerNav", "BodyMesh")]
+unique_name_in_owner = true
+avoidance_enabled = true
+radius = 1.0
+script = ExtResource("12_yhdjd")
+TimerNav = NodePath("TimerNavigation")
+Speed = 200.0
+BodyMesh = NodePath("../../MeshInstance3D")
+CountEntitiesThat = 1
+
+[node name="TimerNavigation" type="Timer" parent="Components/MoveComponent"]
+process_callback = 0
+autostart = true
+
+[node name="CollisionComponent" type="Area3D" parent="Components" node_paths=PackedStringArray("BodyMesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("4_fqwaa")
+BodyMesh = NodePath("../../MeshInstance3D")
+CountEntitiesThat = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Components/CollisionComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("CylinderShape3D_77kq8")
+
+[node name="Upgrade Self" type="Timer" parent="Components" node_paths=PackedStringArray("EventShoot")]
+wait_time = 5.0
+autostart = true
+script = ExtResource("7_o3afs")
+EventShoot = [NodePath("+health"), NodePath("-firerate")]
+
+[node name="+health" type="Node" parent="Components/Upgrade Self"]
+script = ExtResource("8_7o27c")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Health"
+Value = 2.0
+
+[node name="-firerate" type="Node" parent="Components/Upgrade Self"]
+script = ExtResource("8_7o27c")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "FireRate"
+Value = -0.2
+
+[node name="ShootSplashBullet" type="Marker3D" parent="Components" node_paths=PackedStringArray("MeshOfBody")]
+transform = Transform3D(1, 0, 0, 0, 0.642788, -0.766044, 0, 0.766044, 0.642788, 0, 6.5774, 0)
+script = ExtResource("10_h616d")
+MeshOfBody = NodePath("../../MeshInstance3D")
+Bullet = ExtResource("11_fh00m")
+ArcOfSplash = 360.0
+NumberOfBullet = 11
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_right = 0.11
+anchor_bottom = 0.261
+offset_right = 0.279991
+offset_bottom = -0.128006
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+script = ExtResource("15_rs662")
+AjouterDansTroops = true
+Elixir = 50.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite" type="Sprite2D" parent="CanvasLayer/Button"]
+position = Vector2(65, 85)
+scale = Vector2(1, 1.28906)
+texture = ExtResource("2_f4vpb")
+
+[connection signal="button_down" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_down"]
+[connection signal="button_up" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_up"]

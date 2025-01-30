@@ -1,0 +1,175 @@
+[gd_scene load_steps=22 format=3 uid="uid://fgkw8d43u1n3"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/troops.gd" id="1_lvbrw"]
+[ext_resource type="Texture2D" uid="uid://d23yl525rahfj" path="res://Assets/Troops/In UI/Bleu.png" id="2_5t470"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Movement.gd" id="3_78ov0"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Capacité.gd" id="4_4w6co"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Détection.gd" id="4_gtoxe"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Health.gd" id="5_h5718"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Shoot Bullet/SplashBullet.gd" id="7_jxtiu"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Shoot.gd" id="7_x8orv"]
+[ext_resource type="PackedScene" uid="uid://cxgufh5n6v5m4" path="res://Scènes/Bullets/SimpleBullet.tscn" id="8_mx31e"]
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/Card.gd" id="11_jl0dr"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Shoot Bullet/OneBullet.gd" id="12_3lsrl"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0x1k"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_iwbi2"]
+viewport_path = NodePath("UI (subview)")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_dykis"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nntt2"]
+albedo_texture = SubResource("CompressedTexture2D_dykis")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5c4k6"]
+material = SubResource("StandardMaterial3D_nntt2")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3pgk"]
+bg_color = Color(1, 0.776471, 0.843137, 1)
+border_color = Color(0.352941, 0.223529, 1, 1)
+shadow_color = Color(1, 1, 1, 0.639216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5qdn"]
+bg_color = Color(0.113725, 0.352941, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3tvw5"]
+bg_color = Color(0.92549, 0.717647, 0.858824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m84y8"]
+bg_color = Color(0.752941, 0.164706, 0.541176, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_77kq8"]
+height = 0.001
+radius = 14.317
+
+[node name="Bleu3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_lvbrw")
+TeamSide = "Player1"
+Description = "ATTAQUE: 
+Bleu lance des projectiles blessant ses ennemis
+
+CAPACITE : 
+	Moyen De Chargement :  En Prenant des dégats
+Bleu Lance Plusieurs projectiles autour de lui"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_a0x1k")
+
+[node name="UI (sprite)" type="Sprite3D" parent="."]
+transform = Transform3D(2.99498, 0, 0, 0, 1.97921, 2.24782, 0, -2.24782, 1.97921, 0, 1.69338, 0)
+texture = SubResource("ViewportTexture_iwbi2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_5c4k6")
+
+[node name="UI (subview)" type="SubViewport" parent="."]
+transparent_bg = true
+gui_snap_controls_to_pixels = false
+size = Vector2i(136, 74)
+
+[node name="Debug" type="Label" parent="UI (subview)"]
+offset_left = 41.0
+offset_top = 6.0
+offset_right = 91.0
+offset_bottom = 29.0
+text = "Debug
+"
+
+[node name="HealthComponent" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("DebugText", "EventWhenDamaged")]
+unique_name_in_owner = true
+offset_left = -1.0
+offset_top = 31.0
+offset_right = 136.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.909804, 0.764706, 0.968627, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_t3pgk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_h5qdn")
+value = 100.0
+show_percentage = false
+script = ExtResource("5_h5718")
+DebugText = NodePath("../Debug")
+EventWhenDamaged = [NodePath("../../Components/ShootSplashBullet")]
+
+[node name="Capacité" type="ProgressBar" parent="UI (subview)"]
+unique_name_in_owner = true
+offset_left = 10.0
+offset_top = 60.0
+offset_right = 129.0
+offset_bottom = 87.0
+scale = Vector2(1, 0.6)
+theme_override_styles/background = SubResource("StyleBoxFlat_3tvw5")
+theme_override_styles/fill = SubResource("StyleBoxFlat_m84y8")
+max_value = 5.0
+show_percentage = false
+script = ExtResource("4_4w6co")
+
+[node name="Components" type="Node3D" parent="."]
+
+[node name="MoveComponent" type="NavigationAgent3D" parent="Components" node_paths=PackedStringArray("TimerNav", "BodyMesh")]
+avoidance_enabled = true
+script = ExtResource("3_78ov0")
+TimerNav = NodePath("TimerNavigation")
+Speed = 300.0
+BodyMesh = NodePath("../../MeshInstance3D")
+CountEntitiesThat = 1
+
+[node name="TimerNavigation" type="Timer" parent="Components/MoveComponent"]
+autostart = true
+
+[node name="CollisionCompo" type="Area3D" parent="Components" node_paths=PackedStringArray("BodyMesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("4_gtoxe")
+BodyMesh = NodePath("../../MeshInstance3D")
+CountEntitiesThat = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Components/CollisionCompo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.13363, 0)
+shape = SubResource("CylinderShape3D_77kq8")
+
+[node name="Shoot2" type="Timer" parent="Components" node_paths=PackedStringArray("EventShoot")]
+wait_time = 5.052
+autostart = true
+script = ExtResource("7_x8orv")
+EventShoot = [NodePath("../ShootSplashBullet")]
+
+[node name="Shoot" type="Timer" parent="Components" node_paths=PackedStringArray("EventShoot")]
+autostart = true
+script = ExtResource("7_x8orv")
+EventShoot = [NodePath("../ShootOneBullet")]
+
+[node name="ShootSplashBullet" type="Marker3D" parent="Components" node_paths=PackedStringArray("MeshOfBody")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+script = ExtResource("7_jxtiu")
+MeshOfBody = NodePath("../../MeshInstance3D")
+Bullet = ExtResource("8_mx31e")
+ArcOfSplash = 360.0
+NumberOfBullet = 8
+
+[node name="ShootOneBullet" type="Marker3D" parent="Components" node_paths=PackedStringArray("MeshOfBody")]
+script = ExtResource("12_3lsrl")
+Bullet = ExtResource("8_mx31e")
+MeshOfBody = NodePath("../../MeshInstance3D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+offset_right = 127.0
+offset_bottom = 169.0
+flat = true
+script = ExtResource("11_jl0dr")
+AjouterDansTroops = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite" type="Sprite2D" parent="CanvasLayer/Button"]
+position = Vector2(64, 84)
+scale = Vector2(2.6, 2.56716)
+texture = ExtResource("2_5t470")
+
+[connection signal="velocity_computed" from="Components/MoveComponent" to="Components/MoveComponent" method="_on_velocity_computed"]
+[connection signal="button_down" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_down"]
+[connection signal="button_up" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_up"]

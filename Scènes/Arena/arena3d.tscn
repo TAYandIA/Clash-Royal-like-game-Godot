@@ -1,0 +1,109 @@
+[gd_scene load_steps=15 format=3 uid="uid://b82k5x86g0ppx"]
+
+[ext_resource type="Script" path="res://Scripts/Arena/NavUpdate.gd" id="1_pb0y4"]
+[ext_resource type="PackedScene" uid="uid://c5lpdcjtrc63o" path="res://Scènes/Troops/lushinka.tscn" id="2_i0sr2"]
+[ext_resource type="Script" path="res://Scripts/Arena/Camera3D.gd" id="3_d5kyy"]
+[ext_resource type="PackedScene" uid="uid://d1ph1vcldk5y3" path="res://Scènes/Troops/rouge3D.tscn" id="4_p365a"]
+[ext_resource type="PackedScene" uid="uid://deqj63xdetgw7" path="res://Scènes/Arena/ui_arena.tscn" id="5_smcr6"]
+[ext_resource type="PackedScene" uid="uid://fgkw8d43u1n3" path="res://Scènes/Troops/Bleu3D.tscn" id="6_7ykth"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_xsafx"]
+vertices = PackedVector3Array(-9, 1.5, -14, -9, 1.5, 14, 9, 1.5, 14, 9, 1.5, -14)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+agent_radius = 1.0
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_41luh"]
+sky_top_color = Color(0.568627, 0.286275, 0.780392, 1)
+sky_horizon_color = Color(0.737255, 0.8, 0.945098, 1)
+sky_curve = 0.689217
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.431373, 0.670588, 0.72549, 1)
+ground_curve = 0.04
+
+[sub_resource type="Sky" id="Sky_6qnlo"]
+sky_material = SubResource("ProceduralSkyMaterial_41luh")
+
+[sub_resource type="Environment" id="Environment_v8jv5"]
+background_mode = 2
+sky = SubResource("Sky_6qnlo")
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_sky_contribution = 0.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8b0yp"]
+albedo_color = Color(0, 0.133333, 0.901961, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lds5j"]
+material = SubResource("StandardMaterial3D_8b0yp")
+size = Vector3(20, 0.5, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qx1be"]
+size = Vector3(20, 0.5, 30)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_py4lt"]
+size = Vector3(56.0729, 13.1172, 58.6696)
+
+[node name="Node" type="Node"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI Arena" parent="CanvasLayer" instance=ExtResource("5_smcr6")]
+position = Vector2(-4, 439)
+
+[node name="ProgressBar2" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 60.0
+offset_top = 380.0
+offset_right = 368.0
+offset_bottom = 431.0
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_xsafx")
+script = ExtResource("1_pb0y4")
+
+[node name="Arena" type="Node3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.96046e-08, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="NavigationRegion3D/Arena"]
+transform = Transform3D(1, 0, 0, 0, -0.731223, 0.682139, 0, -0.682139, -0.731223, 0, 15.6438, -7.62844)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="NavigationRegion3D/Arena"]
+environment = SubResource("Environment_v8jv5")
+
+[node name="Floor" type="StaticBody3D" parent="NavigationRegion3D/Arena"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D/Arena/Floor"]
+mesh = SubResource("BoxMesh_lds5j")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Arena/Floor"]
+shape = SubResource("BoxShape3D_qx1be")
+
+[node name="Area3D" type="Area3D" parent="NavigationRegion3D/Arena"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.96046e-08, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Arena/Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.18713, 1.29992, -1.57623)
+shape = SubResource("BoxShape3D_py4lt")
+
+[node name="Camera3D" type="Camera3D" parent="NavigationRegion3D/Arena"]
+transform = Transform3D(1, 0, 0, 0, 0.142145, 0.989846, 0, -0.989846, 0.142145, 0, 21.507, 5.96685)
+script = ExtResource("3_d5kyy")
+
+[node name="Bleu3D" parent="." instance=ExtResource("6_7ykth")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.09228, 1, -1.78701)
+InTroops = true
+
+[node name="Rouge3D3" parent="." instance=ExtResource("4_p365a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.294, 1, 12.9054)
+
+[node name="Lushinka" parent="." instance=ExtResource("2_i0sr2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.27859, 5.96046e-08, -3.02019)
+
+[node name="Rouge3D" parent="." instance=ExtResource("4_p365a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 7.18839)
+
+[connection signal="bake_finished" from="NavigationRegion3D" to="NavigationRegion3D" method="_on_bake_finished"]
+[connection signal="area_shape_exited" from="NavigationRegion3D/Arena/Area3D" to="NavigationRegion3D" method="_on_area_3d_area_shape_exited"]
+[connection signal="body_shape_exited" from="NavigationRegion3D/Arena/Area3D" to="NavigationRegion3D" method="_on_area_3d_body_shape_exited"]

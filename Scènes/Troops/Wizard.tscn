@@ -1,0 +1,229 @@
+[gd_scene load_steps=30 format=3 uid="uid://bkx2ku2x0jhvn"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/troops.gd" id="1_wh6bq"]
+[ext_resource type="Texture2D" uid="uid://bua1py4bg76tf" path="res://Assets/IconForClasses/Icon Fleche.png" id="2_girhl"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Health.gd" id="3_ej16a"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Capacité.gd" id="4_dirg1"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Shoot.gd" id="5_3es30"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Movement.gd" id="6_3703x"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Détection.gd" id="7_44dt3"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/For Checking Something/CheckInArea.gd" id="8_21aff"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Shoot Bullet/OneBullet.gd" id="8_i475x"]
+[ext_resource type="PackedScene" uid="uid://cmgwxfwdnqhy5" path="res://Scènes/Bullets/HealingBulletInArea.tscn" id="9_8sqtx"]
+[ext_resource type="Shader" uid="uid://duk06mrimpj6h" path="res://Shaders/HealingArea.tres" id="9_q1uxb"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangeOrIncreaseStat.gd" id="10_jmm6q"]
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/Card.gd" id="10_ktx12"]
+[ext_resource type="Texture2D" uid="uid://fqrnowqfo44v" path="res://Assets/Troops/In UI/Wizarddddddd.png" id="11_r7msr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0x1k"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_iwbi2"]
+viewport_path = NodePath("UI (subview)")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grxc5"]
+albedo_color = Color(0, 0.631373, 0.568627, 1)
+albedo_texture = ExtResource("2_girhl")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lxcva"]
+material = SubResource("StandardMaterial3D_grxc5")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3pgk"]
+bg_color = Color(1, 0.776471, 0.843137, 1)
+border_color = Color(0.352941, 0.223529, 1, 1)
+shadow_color = Color(1, 1, 1, 0.639216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5qdn"]
+bg_color = Color(0.113725, 0.352941, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3tvw5"]
+bg_color = Color(0.92549, 0.717647, 0.858824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m84y8"]
+bg_color = Color(0.752941, 0.164706, 0.541176, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_77kq8"]
+radius = 7.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l8spo"]
+render_priority = 0
+shader = ExtResource("9_q1uxb")
+shader_parameter/Color = Color(0.721569, 0.423529, 0.854902, 1)
+shader_parameter/ExtraOpacity = 0.587
+shader_parameter/Speed = Vector2(5, 5)
+
+[sub_resource type="SphereMesh" id="SphereMesh_cl5w8"]
+material = SubResource("ShaderMaterial_l8spo")
+radius = 6.0
+height = 4.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qf4xx"]
+radius = 5.0
+
+[sub_resource type="Animation" id="Animation_ktde8"]
+resource_name = "CheckInArea"
+length = 0.4
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Components/MakeEventInArea")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.4, 1, 0.001, 0.001, 0.001)
+
+[sub_resource type="Animation" id="Animation_el3ty"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Components/MakeEventInArea")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_45x0x"]
+_data = {
+"CheckInArea": SubResource("Animation_ktde8"),
+"RESET": SubResource("Animation_el3ty")
+}
+
+[node name="Wizard" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_wh6bq")
+TeamSide = "Player1"
+Description = "ATTAQUE: 
+Un Sorcier Capable de lancer des boules de soins soigant ses alliées dès l'impact
+
+CAPACITE : 
+	Moyen De Chargement :  En Attaquant
+	Nombres de Points nécéssaires : 5
+Le Sorcier charge une énorme attaque de zone faisant très mal aux ennemis aux alentours"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_a0x1k")
+
+[node name="UI (sprite)" type="Sprite3D" parent="."]
+transform = Transform3D(2.99498, 0, 0, 0, 1.97921, 2.24782, 0, -2.24782, 1.97921, 0, 1.69338, 0)
+texture = SubResource("ViewportTexture_iwbi2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_lxcva")
+
+[node name="UI (subview)" type="SubViewport" parent="."]
+transparent_bg = true
+gui_snap_controls_to_pixels = false
+size = Vector2i(136, 74)
+
+[node name="Debug" type="Label" parent="UI (subview)"]
+offset_left = 41.0
+offset_top = 6.0
+offset_right = 91.0
+offset_bottom = 29.0
+text = "Debug
+"
+
+[node name="HealthComponent" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("DebugText")]
+unique_name_in_owner = true
+offset_left = -1.0
+offset_top = 31.0
+offset_right = 136.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.909804, 0.764706, 0.968627, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_t3pgk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_h5qdn")
+value = 100.0
+show_percentage = false
+script = ExtResource("3_ej16a")
+DebugText = NodePath("../Debug")
+
+[node name="Capacité" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("EventCapacities")]
+unique_name_in_owner = true
+offset_left = 10.0
+offset_top = 60.0
+offset_right = 129.0
+offset_bottom = 87.0
+scale = Vector2(1, 0.6)
+theme_override_styles/background = SubResource("StyleBoxFlat_3tvw5")
+theme_override_styles/fill = SubResource("StyleBoxFlat_m84y8")
+max_value = 5.0
+show_percentage = false
+script = ExtResource("4_dirg1")
+EventCapacities = [NodePath("../../Components/MakeEventInArea")]
+
+[node name="Components" type="Node3D" parent="."]
+
+[node name="Shoot" type="Timer" parent="Components" node_paths=PackedStringArray("EventShoot")]
+autostart = true
+script = ExtResource("5_3es30")
+EventShoot = [NodePath("../../ShootOneBullet")]
+
+[node name="MoveComponent" type="NavigationAgent3D" parent="Components" node_paths=PackedStringArray("TimerNav", "BodyMesh")]
+script = ExtResource("6_3703x")
+TimerNav = NodePath("TimerNavigation")
+Speed = 400.0
+BodyMesh = NodePath("../../MeshInstance3D")
+
+[node name="TimerNavigation" type="Timer" parent="Components/MoveComponent"]
+wait_time = 0.3
+autostart = true
+
+[node name="CollisionComponent" type="Area3D" parent="Components" node_paths=PackedStringArray("BodyMesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("7_44dt3")
+BodyMesh = NodePath("../../MeshInstance3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Components/CollisionComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.13363, 0)
+shape = SubResource("CylinderShape3D_77kq8")
+
+[node name="MakeEventInArea" type="Area3D" parent="Components" node_paths=PackedStringArray("Event")]
+visible = false
+script = ExtResource("8_21aff")
+Event = [NodePath("-health")]
+ApplyEventTo = 1
+
+[node name="Sprite3D" type="MeshInstance3D" parent="Components/MakeEventInArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("SphereMesh_cl5w8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Components/MakeEventInArea"]
+shape = SubResource("CylinderShape3D_qf4xx")
+disabled = true
+
+[node name="-health" type="Node" parent="Components/MakeEventInArea"]
+script = ExtResource("10_jmm6q")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Health"
+Value = -100.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Components/MakeEventInArea"]
+root_node = NodePath("../../..")
+libraries = {
+"": SubResource("AnimationLibrary_45x0x")
+}
+
+[node name="ShootOneBullet" type="Marker3D" parent="." node_paths=PackedStringArray("MeshOfBody")]
+script = ExtResource("8_i475x")
+Bullet = ExtResource("9_8sqtx")
+MeshOfBody = NodePath("../MeshInstance3D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+offset_right = 127.0
+offset_bottom = 169.0
+flat = true
+script = ExtResource("10_ktx12")
+AjouterDansTroops = true
+Elixir = 50.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite" type="Sprite2D" parent="CanvasLayer/Button"]
+position = Vector2(64, 84)
+scale = Vector2(2.6, 2.56716)
+texture = ExtResource("11_r7msr")
+
+[connection signal="velocity_computed" from="Components/MoveComponent" to="Components/MoveComponent" method="_on_velocity_computed"]
+[connection signal="button_down" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_down"]
+[connection signal="button_up" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_up"]

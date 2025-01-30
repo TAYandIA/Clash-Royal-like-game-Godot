@@ -1,0 +1,198 @@
+[gd_scene load_steps=18 format=3 uid="uid://bs2wh2xkjt28r"]
+
+[ext_resource type="Script" path="res://Scripts/troops.gd" id="1_txicw"]
+[ext_resource type="Texture2D" uid="uid://scrr8mmwvii" path="res://Assets/Troops/In Battle/assets_NewSprite2.png3.png" id="3_6qq5e"]
+[ext_resource type="Texture2D" uid="uid://d23yl525rahfj" path="res://Assets/Troops/In UI/Bleu.png" id="4_gka5f"]
+[ext_resource type="Texture2D" uid="uid://x644cdkm0yej" path="res://addons/PerfBullets/test_bullet_animation_sheet.png" id="4_xk1vn"]
+[ext_resource type="Script" path="res://Scènes/Troops/Attack.gd" id="5_ryv1w"]
+[ext_resource type="Script" path="res://Scènes/Troops/AOD.gd" id="6_s7gsn"]
+[ext_resource type="Texture2D" uid="uid://cwywemefckjk8" path="res://Assets/Troops/Bullets/NewSprite3.png" id="7_6aif4"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_017up"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_6qq5e")
+}],
+"loop": true,
+"name": &"In Battle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_gka5f")
+}],
+"loop": true,
+"name": &"In UI",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6cjy"]
+size = Vector2(72, 72)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c3t36"]
+bg_color = Color(1, 0.776471, 0.843137, 1)
+border_color = Color(0.352941, 0.223529, 1, 1)
+shadow_color = Color(1, 1, 1, 0.639216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s7ffw"]
+bg_color = Color(0.113725, 0.352941, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ia6i2"]
+font_size = 100
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g1ubk"]
+radius = 442.22
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rayqn"]
+custom_solver_bias = 1.0
+radius = 20.0
+
+[sub_resource type="BulletType" id="BulletType_th73a"]
+initialSpeed = 200.0
+_shape = SubResource("CircleShape2D_rayqn")
+scale = 0.2
+mask = 256
+collideWithBodies = true
+collideWithAreas = false
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iy47l"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_6aif4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0bbhx"]
+radius = 36.26
+
+[node name="Bleu" type="Node2D"]
+
+[node name="Troop" type="CharacterBody2D" parent="." groups=["Troops"]]
+scale = Vector2(0.2, 0.2)
+collision_layer = 513
+script = ExtResource("1_txicw")
+TeamSide = "b"
+speed = 80.0
+pv = 500.0
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Troop"]
+position = Vector2(0, 3)
+sprite_frames = SubResource("SpriteFrames_017up")
+animation = &"In UI"
+
+[node name="NavigationAgent2D2" type="NavigationAgent2D" parent="Troop"]
+path_desired_distance = 100.0
+target_desired_distance = 533.23
+path_max_distance = 10000.0
+avoidance_enabled = true
+radius = 85.47
+neighbor_distance = 12764.1
+time_horizon_agents = 5.71
+time_horizon_obstacles = 6.23
+max_speed = 107.9
+avoidance_layers = 2
+debug_enabled = true
+debug_use_custom = true
+debug_path_custom_color = Color(1, 0, 0, 1)
+
+[node name="Collision_Battle" type="CollisionShape2D" parent="Troop"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_b6cjy")
+
+[node name="UI" type="Node2D" parent="Troop"]
+
+[node name="HealthBar" type="ProgressBar" parent="Troop/UI"]
+offset_left = -68.0
+offset_top = -79.0
+offset_right = 69.0
+offset_bottom = -54.0
+theme_override_colors/font_color = Color(0.909804, 0.764706, 0.968627, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_c3t36")
+theme_override_styles/fill = SubResource("StyleBoxFlat_s7ffw")
+value = 100.0
+show_percentage = false
+
+[node name="Debug" type="Label" parent="Troop/UI"]
+offset_left = -82.0
+offset_top = -147.0
+offset_right = 230.0
+offset_bottom = -10.0
+scale = Vector2(0.5, 0.5)
+text = "Debug
+"
+label_settings = SubResource("LabelSettings_ia6i2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Select UI" type="Button" parent="Troop/UI"]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0)
+show_behind_parent = true
+offset_left = -68.0
+offset_top = -82.0
+offset_right = 68.0
+offset_bottom = 90.0
+
+[node name="TIMER" type="Node" parent="Troop"]
+
+[node name="Timer Nav" type="Timer" parent="Troop/TIMER"]
+wait_time = 0.112
+autostart = true
+
+[node name="Timer Fire" type="Timer" parent="Troop/TIMER"]
+autostart = true
+
+[node name="EnemyDetection" type="Area2D" parent="Troop"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Troop/EnemyDetection"]
+shape = SubResource("CircleShape2D_g1ubk")
+
+[node name="Spawner" type="Spawner" parent="."]
+startMode = 2
+bulletType = SubResource("BulletType_th73a")
+fireRate = 0.25
+fireRadiusDegrees = 180.0
+startRotation = 225.0
+staysTowardPlayer = true
+rowsInAtlas = 2
+columnsInAtlas = 2
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("4_xk1vn")
+script = ExtResource("5_ryv1w")
+Damage = 1.0
+AOD = true
+TeamSide = null
+speed = null
+pv = null
+
+[node name="Area2D" type="Area2D" parent="Spawner"]
+scale = Vector2(0.4, 0.4)
+script = ExtResource("6_s7gsn")
+TeamSide = null
+speed = null
+pv = null
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Spawner/Area2D"]
+sprite_frames = SubResource("SpriteFrames_iy47l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawner/Area2D"]
+shape = SubResource("CircleShape2D_0bbhx")
+
+[node name="Timer AOD" type="Timer" parent="Spawner/Area2D"]
+one_shot = true
+
+[connection signal="HitSomething" from="Troop" to="Spawner/Area2D" method="_on_troop_hit_something"]
+[connection signal="button_down" from="Troop/UI/Select UI" to="Troop" method="_on_select_ui_button_down"]
+[connection signal="button_up" from="Troop/UI/Select UI" to="Troop" method="_on_select_ui_button_up"]
+[connection signal="timeout" from="Troop/TIMER/Timer Nav" to="Troop" method="_on_timer_2_timeout"]
+[connection signal="timeout" from="Troop/TIMER/Timer Fire" to="Troop" method="_on_timer_fire_timeout"]
+[connection signal="body_entered" from="Troop/EnemyDetection" to="Troop" method="_on_enemy_detection_body_entered"]
+[connection signal="body_exited" from="Troop/EnemyDetection" to="Troop" method="_on_enemy_detection_body_exited"]
+[connection signal="bullet_hit" from="Spawner" to="Troop" method="_on_spawner_bullet_hit"]
+[connection signal="body_entered" from="Spawner/Area2D" to="Spawner/Area2D" method="_on_body_entered"]
+[connection signal="timeout" from="Spawner/Area2D/Timer AOD" to="Spawner/Area2D" method="_on_timer_aod_timeout"]

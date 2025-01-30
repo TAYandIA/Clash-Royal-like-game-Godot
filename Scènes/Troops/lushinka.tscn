@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5lpdcjtrc63o"]
+
+[ext_resource type="ArrayMesh" uid="uid://dtfrvgog8kr2h" path="res://Assets/Modèles 3D/Coin_New.tres" id="1_wmmf3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o03ol"]
+
+[node name="Lushinka" type="CharacterBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.441067, -0.897475, 0, 0.897475, 0.441067, 0, 1, 0)
+mesh = ExtResource("1_wmmf3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_o03ol")

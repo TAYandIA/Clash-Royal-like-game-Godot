@@ -1,0 +1,136 @@
+[gd_scene load_steps=17 format=3 uid="uid://be1v7ciiegbik"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/troops.gd" id="1_rrm0f"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Health.gd" id="3_v1x1w"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Capacité.gd" id="4_ret5t"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/GiveOrRemoveCard.gd" id="5_fpava"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangePlayerStats.gd" id="6_skkyw"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Give Buff/ChangeOrIncreaseStat.gd" id="10_v6tro"]
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/Card.gd" id="13_8f8l6"]
+[ext_resource type="Texture2D" uid="uid://drb8j5vc0yja8" path="res://Assets/Troops/In UI/ElixirGolem.png" id="13_sgfum"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0x1k"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_iwbi2"]
+viewport_path = NodePath("UI (subview)")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tlaui"]
+albedo_color = Color(1, 0.517647, 0, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lxcva"]
+material = SubResource("StandardMaterial3D_tlaui")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3pgk"]
+bg_color = Color(1, 0.776471, 0.843137, 1)
+border_color = Color(0.352941, 0.223529, 1, 1)
+shadow_color = Color(1, 1, 1, 0.639216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5qdn"]
+bg_color = Color(0.113725, 0.352941, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3tvw5"]
+bg_color = Color(0.92549, 0.717647, 0.858824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m84y8"]
+bg_color = Color(0.752941, 0.164706, 0.541176, 1)
+
+[node name="GolemElixir" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_rrm0f")
+TeamSide = "Player1"
+Description = "CAPACITE : 
+	Moyen De Chargement :  En Prenant des dégats
+	Nombres de Points nécéssaires : 5
+Le GolemElixir vous donne de l'élixir et une carte du même type"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_a0x1k")
+
+[node name="UI (sprite)" type="Sprite3D" parent="."]
+transform = Transform3D(2.99498, 0, 0, 0, 1.97921, 2.24782, 0, -2.24782, 1.97921, 0, 1.69338, 0)
+texture = SubResource("ViewportTexture_iwbi2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_lxcva")
+
+[node name="UI (subview)" type="SubViewport" parent="."]
+transparent_bg = true
+gui_snap_controls_to_pixels = false
+size = Vector2i(136, 74)
+
+[node name="Debug" type="Label" parent="UI (subview)"]
+offset_left = 41.0
+offset_top = 6.0
+offset_right = 91.0
+offset_bottom = 29.0
+text = "Debug
+"
+
+[node name="HealthComponent" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("DebugText", "EventWhenDamaged")]
+unique_name_in_owner = true
+offset_left = -1.0
+offset_top = 31.0
+offset_right = 136.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.909804, 0.764706, 0.968627, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_t3pgk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_h5qdn")
+value = 100.0
+show_percentage = false
+script = ExtResource("3_v1x1w")
+DebugText = NodePath("../Debug")
+EventWhenDamaged = [NodePath("+Capacity")]
+
+[node name="+Capacity" type="Node" parent="UI (subview)/HealthComponent"]
+script = ExtResource("10_v6tro")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Capacity"
+Value = 1.0
+
+[node name="Capacité" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("EventCapacities")]
+unique_name_in_owner = true
+offset_left = 10.0
+offset_top = 60.0
+offset_right = 129.0
+offset_bottom = 87.0
+scale = Vector2(1, 0.6)
+theme_override_styles/background = SubResource("StyleBoxFlat_3tvw5")
+theme_override_styles/fill = SubResource("StyleBoxFlat_m84y8")
+max_value = 5.0
+show_percentage = false
+script = ExtResource("4_ret5t")
+EventCapacities = [NodePath("GiveOrRemoveCard"), NodePath("+Elixir")]
+
+[node name="GiveOrRemoveCard" type="Node" parent="UI (subview)/Capacité"]
+script = ExtResource("5_fpava")
+TypeDeChangement = "Give Card"
+SupprimerInHand = true
+SupprimerNotInHand = true
+
+[node name="+Elixir" type="Node" parent="UI (subview)/Capacité"]
+script = ExtResource("6_skkyw")
+TypeDeChangement = "Additioner la stat"
+StatToChange = "Elixir"
+Value = 25.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="Button" type="Button" parent="CanvasLayer"]
+unique_name_in_owner = true
+offset_right = 127.0
+offset_bottom = 169.0
+flat = true
+script = ExtResource("13_8f8l6")
+AjouterDansTroops = true
+Elixir = 50.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite" type="Sprite2D" parent="CanvasLayer/Button"]
+position = Vector2(64, 84)
+scale = Vector2(2.6, 2.56716)
+texture = ExtResource("13_sgfum")
+
+[connection signal="button_down" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_down"]
+[connection signal="button_up" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_up"]

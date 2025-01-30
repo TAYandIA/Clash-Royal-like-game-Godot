@@ -1,0 +1,146 @@
+[gd_scene load_steps=19 format=3 uid="uid://re74ce17k1mv"]
+
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/troops.gd" id="1_qq5wj"]
+[ext_resource type="Texture2D" uid="uid://bytmqtwsqhw25" path="res://Assets/Troops/In Battle/assets_NewSprite2.png2.png" id="2_3lfkj"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Health.gd" id="2_vm16r"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Call MakeSomething/Shoot.gd" id="4_3prhq"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Movement.gd" id="5_oevk5"]
+[ext_resource type="Script" path="res://Scripts/Components/Basic Components/Détection.gd" id="6_jglq4"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Shoot Bullet/SplashBullet.gd" id="7_qbl1r"]
+[ext_resource type="PackedScene" uid="uid://dqhfskv0ievq3" path="res://Scènes/Bullets/HealingBullet.tscn" id="9_2mlws"]
+[ext_resource type="Script" path="res://Scripts/Components/Make Something Components/Shoot Bullet/OneBullet.gd" id="9_5m01g"]
+[ext_resource type="Script" path="res://Scripts/Components/For Troops/Card.gd" id="10_goc42"]
+[ext_resource type="Texture2D" uid="uid://b3wr0c6t10lni" path="res://Assets/Troops/In UI/NewSprite12.png" id="12_acytx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a0x1k"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_iwbi2"]
+viewport_path = NodePath("UI (subview)")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grxc5"]
+albedo_texture = ExtResource("2_3lfkj")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lxcva"]
+material = SubResource("StandardMaterial3D_grxc5")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3pgk"]
+bg_color = Color(1, 0.776471, 0.843137, 1)
+border_color = Color(0.352941, 0.223529, 1, 1)
+shadow_color = Color(1, 1, 1, 0.639216)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h5qdn"]
+bg_color = Color(0.113725, 0.352941, 1, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_77kq8"]
+height = 0.001
+radius = 7.0
+
+[node name="Bleu3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_qq5wj")
+TeamSide = "Player1"
+InTroops = true
+Description = "ATTAQUE: 
+Jaune lance des glaces soigant ses alliées
+
+CAPACITE : 
+	Moyen De Chargement :  En Entrant Dans l'Arène
+Jaune Lance Plusieurs glaces revigorantes autour de lui"
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_a0x1k")
+
+[node name="UI (sprite)" type="Sprite3D" parent="."]
+transform = Transform3D(2.99498, 0, 0, 0, 1.97921, 2.24782, 0, -2.24782, 1.97921, 0, 1.69338, 0)
+texture = SubResource("ViewportTexture_iwbi2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_lxcva")
+
+[node name="UI (subview)" type="SubViewport" parent="."]
+transparent_bg = true
+gui_snap_controls_to_pixels = false
+size = Vector2i(136, 74)
+
+[node name="Debug" type="Label" parent="UI (subview)"]
+offset_left = 41.0
+offset_top = 6.0
+offset_right = 91.0
+offset_bottom = 29.0
+text = "Debug
+"
+
+[node name="HealthComponent" type="ProgressBar" parent="UI (subview)" node_paths=PackedStringArray("DebugText")]
+unique_name_in_owner = true
+offset_left = -1.0
+offset_top = 31.0
+offset_right = 136.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.909804, 0.764706, 0.968627, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_t3pgk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_h5qdn")
+value = 100.0
+show_percentage = false
+script = ExtResource("2_vm16r")
+DebugText = NodePath("../Debug")
+
+[node name="Components" type="Node3D" parent="."]
+
+[node name="Shoot" type="Timer" parent="Components" node_paths=PackedStringArray("EventShoot")]
+autostart = true
+script = ExtResource("4_3prhq")
+EventShoot = [NodePath("../ShootOneBullet")]
+
+[node name="MoveComponent" type="NavigationAgent3D" parent="Components" node_paths=PackedStringArray("TimerNav", "BodyMesh")]
+script = ExtResource("5_oevk5")
+TimerNav = NodePath("TimerNavigation")
+Speed = 400.0
+BodyMesh = NodePath("../../MeshInstance3D")
+
+[node name="TimerNavigation" type="Timer" parent="Components/MoveComponent"]
+wait_time = 0.3
+autostart = true
+
+[node name="CollisionComponent" type="Area3D" parent="Components" node_paths=PackedStringArray("BodyMesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("6_jglq4")
+BodyMesh = NodePath("../../MeshInstance3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Components/CollisionComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.13363, 0)
+shape = SubResource("CylinderShape3D_77kq8")
+
+[node name="ShootSplashBullet" type="Node3D" parent="Components" node_paths=PackedStringArray("MeshOfBody")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+script = ExtResource("7_qbl1r")
+MeshOfBody = NodePath("../../MeshInstance3D")
+Bullet = ExtResource("9_2mlws")
+ArcOfSplash = 360.0
+NumberOfBullet = 30
+
+[node name="ShootOneBullet" type="Marker3D" parent="Components" node_paths=PackedStringArray("MeshOfBody")]
+script = ExtResource("9_5m01g")
+Bullet = ExtResource("9_2mlws")
+MeshOfBody = NodePath("../../MeshInstance3D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="Button" type="Button" parent="CanvasLayer" node_paths=PackedStringArray("MakeSomethingEvent")]
+offset_right = 127.0
+offset_bottom = 169.0
+flat = true
+script = ExtResource("10_goc42")
+MakeSomethingEvent = [NodePath("../../Components/ShootSplashBullet")]
+AjouterDansTroops = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite" type="Sprite2D" parent="CanvasLayer/Button"]
+position = Vector2(64, 84)
+scale = Vector2(2.6, 2.56716)
+texture = ExtResource("12_acytx")
+
+[connection signal="velocity_computed" from="Components/MoveComponent" to="Components/MoveComponent" method="_on_velocity_computed"]
+[connection signal="button_down" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_down"]
+[connection signal="button_up" from="CanvasLayer/Button" to="CanvasLayer/Button" method="_on_button_up"]
